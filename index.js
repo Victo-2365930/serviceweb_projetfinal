@@ -6,7 +6,7 @@ const app = express();
 // Importer les middlewares
 app.use(express.json());
 
-// Importer le fichier de router du fichier salutations.route
+// Importer le fichier de router du fichier taches.routes
 import methoderoutes from './src/routes/taches.routes.js';
 
 // On associe la route / au router importé
