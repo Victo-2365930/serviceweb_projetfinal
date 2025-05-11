@@ -1,8 +1,10 @@
+import express from 'express';
 import {
     ListeTacheParUser, AfficherTache, AjouterTache, ModifierTache,
     ModifierSTache, SupprimerTache, AjouterUtilisateur, AvoirCleApi,
     AjouterSousTache, ModifierSousTache, SupprimerSousTache, ModifierStatutSousTache
 } from "../controllers/taches.controller.js";
+import authentification from "../middleware/authentification.middleware.js";
 
 const router = express.Router();
 
