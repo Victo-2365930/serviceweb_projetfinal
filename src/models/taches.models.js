@@ -188,7 +188,7 @@ const ValidationCle = (cleApi) => {
     });
 };
 
-export default {
+export {
     listerTachesUtilisateur, ajouterTache,
     ajouterSousTache, modifierTache,
     modifierStatutTache, modifierStatutSousTache,
