@@ -1,10 +1,8 @@
 import express from 'express';
-
-// Créer une application express
 const app = express();
 
 // Importer les middlewares
-app.use(express.json());
+app.use(express.json()); // <-- Assurez-vous que cette ligne est présente et avant vos routes.
 
 // Importer le fichier de router du fichier taches.routes
 import methoderoutes from './src/routes/taches.routes.js';
