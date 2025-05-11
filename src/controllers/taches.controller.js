@@ -8,8 +8,8 @@ import {
     ValidationCle
 } from "../models/taches.models.js";
 
-import { createRandomString } from "../generercleapi.js";
-import db from '../config/db.js'; // Importez l'instance de la base de données
+import { createRandomString } from "../utils/generercleapi.js";
+import db from '../config/db.js';
 
 const ListeTacheParUser = async (req, res) => {
     const utilisateur = req.query.utilisateur;
