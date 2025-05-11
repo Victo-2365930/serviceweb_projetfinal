@@ -1,8 +1,7 @@
 import {
-    ListeTacheParUser, AfficherTache, AjouterTache,
-    ModifierTache,ModifierSTache, SupprimerTache, 
-    AjouterUtilisateur, AvoirCleApi,AjouterSousTache,
-    ModifierSousTache, SupprimerSousTache, ModifierStatutSousTache
+    ListeTacheParUser, AfficherTache, AjouterTache, ModifierTache,
+    ModifierSTache, SupprimerTache, AjouterUtilisateur, AvoirCleApi,
+    AjouterSousTache, ModifierSousTache, SupprimerSousTache, ModifierStatutSousTache
 } from "../controllers/taches.controller.js";
 
 const router = express.Router();
