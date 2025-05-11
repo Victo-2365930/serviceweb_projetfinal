@@ -82,9 +82,11 @@ const AjouterUtilisateur = async (req, res) => {
         const result = await ajouterUtilisateurModel(nom, prenom, courriel, password, cle_api);
         res.status(201).json({ cle_api: result.rows[0].cle_api });
     } catch (err) {
+        console.error("Erreur SQL :", err); 
         res.status(500).json({ message: "Erreur lors de la création de l'utilisateur" });
     }
 };
+
 
 const AvoirCleApi = async (req, res) => {
     const { courriel, password, regen } = req.query;
