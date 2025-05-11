@@ -1,6 +1,6 @@
 // src/controllers/taches.controller.js
 import {
-    listerTachesUtilisateur, ajouterTache,
+    listerTachesUtilisateur, ajouterTacheModel,
     ajouterSousTacheModel, modifierTacheModel,
     modifierStatutTacheModel, modifierStatutSousTacheModel,
     supprimerTacheModel, afficherTacheAvecSousTaches,
