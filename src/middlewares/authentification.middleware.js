@@ -7,7 +7,7 @@ const authentification = (req, res, next) => {
         return res.status(401).json({ message: "Vous devez fournir une clé api" });
     }
 
-    // Récupérer la clé API qui est dans l'entête au format "cle_api XXXXXXXX" (28 caractères random)
+    // Récupérer la clé API  (28 caractères random)
     const cleApi = req.headers.authorization;
 
     // Vérifier si la clé API est valide
@@ -17,11 +17,13 @@ const authentification = (req, res, next) => {
                 return res.status(401).json({ message: "Clé API invalide" });
             } else {
                 // Clé API valide : on garde le ID
-                req.id = idUtilisateur;
+                req.id = resultat.id;
                 next();
+                return;
             }
         })
         .catch(erreur => {
+            console.error(`Erreur SQL ${erreur.code} lors de la validation de la clé API. State: ${erreur.sqlState}, message: ${erreur.message}`);
             return res.status(500).json({ message: "Erreur lors de la validation de la clé api" });
         });
 };
