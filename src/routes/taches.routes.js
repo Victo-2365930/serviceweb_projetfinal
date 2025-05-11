@@ -1,10 +1,9 @@
-import express from 'express';
 import {
-    ListeTacheParUser, AfficherTache, AjouterTache, ModifierTache,
-    ModifierSTache, SupprimerTache, AjouterUtilisateur, AvoirCleApi,
-    AjouterSousTache, ModifierSousTache, SupprimerSousTache, ModifierStatutSousTache
-} from "../src/controllers/taches.controller.js";
-import authentification from "../middleware/authentification.middleware.js";
+    ListeTacheParUser, AfficherTache, AjouterTache,
+    ModifierTache,ModifierSTache, SupprimerTache, 
+    AjouterUtilisateur, AvoirCleApi,AjouterSousTache,
+    ModifierSousTache, SupprimerSousTache, ModifierStatutSousTache
+} from "../controllers/taches.controller.js";
 
 const router = express.Router();
 
