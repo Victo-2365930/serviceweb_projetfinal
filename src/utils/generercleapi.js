@@ -4,7 +4,7 @@ https://sentry.io/answers/generate-random-string-characters-in-javascript/#:~:te
 function createRandomString() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < 28; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
