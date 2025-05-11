@@ -4,7 +4,7 @@ import {
     ModifierSTache, SupprimerTache, AjouterUtilisateur, AvoirCleApi,
     AjouterSousTache, ModifierSousTache, SupprimerSousTache, ModifierStatutSousTache
 } from "../controllers/taches.controller.js";
-import authentification from "../middleware/authentification.middleware.js";
+import authentification from "../middlewares/authentification.middleware.js";
 
 const router = express.Router();
 
