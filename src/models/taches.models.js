@@ -131,10 +131,10 @@ const modifierSousTache = ({ id, titre, complete }) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE sous_taches
-            SET titre = $1, complete = $2
-            WHERE id = $3
+            SET titre = $1, complete = false
+            WHERE id = $2
         `;
-        db.query(requete, [titre, complete, id], (erreur, resultat) => {
+        db.query(requete, [titre, id], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
