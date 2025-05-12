@@ -18,7 +18,6 @@ const ListeTacheParUtilisateur = async (req, res) => {
         const liste = await listerTachesUtilisateur(utilisateur_id, termine);
         res.status(200).json(liste);
     } catch (err) {
-        console.error("Erreur dans ListeTacheParUser :", err);
         res.status(500).json({ message: "Erreur lors de la récupération des tâches" });
     }
 };
@@ -34,7 +33,6 @@ const AfficherTache = async (req, res) => {
         }
         res.status(200).json(tache);
     } catch (err) {
-        console.error("Erreur dans AfficherTache :", err);
         res.status(500).json({ message: "Erreur lors de la récupération de la tâche" });
     }
 };
@@ -46,7 +44,6 @@ const AjouterTache = async (req, res) => {
         await ajouterTache({ utilisateur_id, titre, description, date_debut, date_echeance, complete });
         res.status(201).json({ message: "Tâche ajoutée" });
     } catch (err) {
-        console.error("Erreur dans AjouterTache :", err);
         res.status(500).json({ message: "Erreur lors de l'ajout de la tâche" });
     }
 };
@@ -63,7 +60,6 @@ const ModifierTache = async (req, res) => {
         await modifierTache({ id: tacheId, titre, description, date_debut, date_echeance });
         res.status(200).json({ message: "Tâche modifiée" });
     } catch (err) {
-        console.error("Erreur dans ModifierTache :", err);
         res.status(500).json({ message: "Erreur lors de la modification" });
     }
 };
@@ -80,7 +76,6 @@ const ModifierStatutTache = async (req, res) => {
         await modifierStatutTache(tacheId);
         res.status(200).json({ message: "Statut de la tâche mis à jour" });
     } catch (err) {
-        console.error("Erreur dans ModifierSTache :", err);
         res.status(500).json({ message: "Erreur lors de la mise à jour du statut de la tâche" });
     }
 };
@@ -96,7 +91,6 @@ const SupprimerTache = async (req, res) => {
         await supprimerTache(tacheId);
         res.status(200).json({ message: "Tâche supprimée" });
     } catch (err) {
-        console.error("Erreur dans SupprimerTache :", err);
         res.status(500).json({ message: "Erreur lors de la suppression de la tâche" });
     }
 };
@@ -114,7 +108,6 @@ const AjouterSousTache = async (req, res) => {
         const tache = await afficherTacheAvecSousTaches(tache_id);
         res.status(201).json(tache);
     } catch (err) {
-        console.error("Erreur dans AjouterSousTache :", err);
         res.status(500).json({ message: "Erreur lors de l'ajout de la sous-tâche" });
     }
 };
@@ -137,7 +130,6 @@ const ModifierSousTache = async (req, res) => {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
         }
     } catch (err) {
-        console.error("Erreur dans ModifierSousTache :", err);
         res.status(500).json({ message: "Erreur lors de la modification de la sous-tâche" });
     }
 };
