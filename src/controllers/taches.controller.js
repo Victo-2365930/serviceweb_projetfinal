@@ -1,16 +1,16 @@
-// src/controllers/taches.controller.js
 import {
     listerTachesUtilisateur, ajouterTache,
     ajouterSousTache, modifierTache,
     modifierStatutTache, modifierStatutSousTache,
     supprimerTache, afficherTacheAvecSousTaches,
-    ajouterUtilisateur, trouverCleApi
+    ajouterUtilisateur, trouverCleApi,
+    verifierProprietaireTache, verifierProprietaireSousTache
 } from "../models/taches.models.js";
 
 import { createRandomString } from "../utils/generercleapi.js";
 import db from '../config/db.js';
 
-const ListeTacheParUser = async (req, res) => {
+const ListeTacheParUtilisateur = async (req, res) => {
     const utilisateur_id = req.id;
     const termine = req.query.termine;
     try {
@@ -23,10 +23,14 @@ const ListeTacheParUser = async (req, res) => {
 };
 
 const AfficherTache = async (req, res) => {
+    const tacheId = req.params.id;
     const utilisateur_id = req.id;
     try {
-        const tache = await afficherTacheAvecSousTaches(utilisateur_id);
+        const tache = await afficherTacheAvecSousTaches(tacheId);
         if (!tache) return res.status(404).json({ message: "Tâche non trouvée" });
+        if (tache.utilisateur_id !== utilisateur_id) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à voir cette tâche." });
+        }
         res.status(200).json(tache);
     } catch (err) {
         console.error("Erreur dans AfficherTache :", err);
@@ -47,10 +51,15 @@ const AjouterTache = async (req, res) => {
 };
 
 const ModifierTache = async (req, res) => {
+    const tacheId = req.params.id;
     const utilisateur_id = req.id;
     const { titre, description, date_debut, date_echeance } = req.body;
     try {
-        await modifierTache({ utilisateur_id, titre, description, date_debut, date_echeance });
+        const estProprietaire = await verifierProprietaireTache(tacheId, utilisateur_id);
+        if (!estProprietaire) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier cette tâche." });
+        }
+        await modifierTache({ id: tacheId, titre, description, date_debut, date_echeance });
         res.status(200).json({ message: "Tâche modifiée" });
     } catch (err) {
         console.error("Erreur dans ModifierTache :", err);
@@ -58,11 +67,16 @@ const ModifierTache = async (req, res) => {
     }
 };
 
-const ModifierSTache = async (req, res) => {
+const ModifierStatutTache = async (req, res) => {
+    const tacheId = req.params.id;
     const utilisateur_id = req.id;
     const { complete } = req.body;
     try {
-        await modifierStatutTache(utilisateur_id, complete);
+        const estProprietaire = await verifierProprietaireTache(tacheId, utilisateur_id);
+        if (!estProprietaire) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier cette tâche." });
+        }
+        await modifierStatutTache(tacheId, complete);
         res.status(200).json({ message: "Statut de la tâche mis à jour" });
     } catch (err) {
         console.error("Erreur dans ModifierSTache :", err);
@@ -71,13 +85,104 @@ const ModifierSTache = async (req, res) => {
 };
 
 const SupprimerTache = async (req, res) => {
+    const tacheId = req.params.id;
     const utilisateur_id = req.id;
     try {
-        await supprimerTache(utilisateur_id);
+        const estProprietaire = await verifierProprietaireTache(tacheId, utilisateur_id);
+        if (!estProprietaire) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à supprimer cette tâche." });
+        }
+        await supprimerTache(tacheId);
         res.status(200).json({ message: "Tâche supprimée" });
     } catch (err) {
         console.error("Erreur dans SupprimerTache :", err);
         res.status(500).json({ message: "Erreur lors de la suppression de la tâche" });
+    }
+};
+
+const AjouterSousTache = async (req, res) => {
+    const { tache_id } = req.params;
+    const utilisateur_id = req.id;
+    const { titre, complete } = req.body;
+    try {
+        const estProprietaire = await verifierProprietaireTache(tache_id, utilisateur_id);
+        if (!estProprietaire) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à ajouter une sous-tâche à cette tâche." });
+        }
+        await ajouterSousTache(tache_id, titre, complete);
+        const tache = await afficherTacheAvecSousTaches(tache_id);
+        res.status(201).json(tache);
+    } catch (err) {
+        console.error("Erreur dans AjouterSousTache :", err);
+        res.status(500).json({ message: "Erreur lors de l'ajout de la sous-tâche" });
+    }
+};
+
+const ModifierSousTache = async (req, res) => {
+    const sousTacheId = req.params.id;
+    const utilisateur_id = req.id;
+    const { titre, complete } = req.body;
+    try {
+        const estProprietaire = await verifierProprietaireSousTache(sousTacheId, utilisateur_id);
+        if (!estProprietaire) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier cette sous-tâche." });
+        }
+        const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
+        if (sousTacheInfo.rows.length > 0) {
+            await modifierSousTache({ id: sousTacheId, titre, complete });
+            const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
+            res.status(200).json(tache);
+        } else {
+            res.status(404).json({ message: "Sous-tâche non trouvée." });
+        }
+    } catch (err) {
+        console.error("Erreur dans ModifierSousTache :", err);
+        res.status(500).json({ message: "Erreur lors de la modification de la sous-tâche" });
+    }
+};
+
+const ModifierStatutSousTache = async (req, res) => {
+    const sousTacheId = req.params.id;
+    const utilisateur_id = req.id;
+    const { complete } = req.body;
+    try {
+        const estProprietaire = await verifierProprietaireSousTache(sousTacheId, utilisateur_id);
+        if (!estProprietaire) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier le statut de cette sous-tâche." });
+        }
+        const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
+        if (sousTacheInfo.rows.length > 0) {
+            await modifierStatutSousTache(sousTacheId, complete);
+            const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
+            res.status(200).json(tache);
+        } else {
+            res.status(404).json({ message: "Sous-tâche non trouvée." });
+        }
+    } catch (err) {
+        console.error("Erreur dans ModifierStatutSousTache :", err);
+        res.status(500).json({ message: "Erreur lors de la mise à jour du statut de la sous-tâche" });
+    }
+};
+
+const SupprimerSousTache = async (req, res) => {
+    const sousTacheId = req.params.id;
+    const utilisateur_id = req.id;
+    try {
+        const estProprietaire = await verifierProprietaireSousTache(sousTacheId, utilisateur_id);
+        if (!estProprietaire) {
+            return res.status(403).json({ message: "Vous n'êtes pas autorisé à supprimer cette sous-tâche." });
+        }
+        const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
+        if (sousTacheInfo.rows.length > 0) {
+            await supprimerSousTache(sousTacheId);
+            const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
+            res.status(200).json(tache);
+        } else {
+            res.status(404).json({ message: "Sous-tâche non trouvée." });
+        }
+    } catch (err) {
+        console.error("Erreur dans SupprimerSousTache :", err);
+        res.status(500).json({ message: "Erreur lors de la suppression de la sous-tâche" });
     }
 };
 
@@ -98,7 +203,7 @@ const AvoirCleApi = async (req, res) => {
     try {
         if (regen == '1') {
             const nouvelleCle = createRandomString();
-            await db.query(`UPDATE utilisateurs SET cle_api = $1 WHERE courriel = $2 AND password = $3`, [nouvelleCle, courriel, password]);
+            await db.query('UPDATE utilisateurs SET cle_api = $1 WHERE courriel = $2 AND password = $3', [nouvelleCle, courriel, password]);
             return res.status(200).json({ cle_api: nouvelleCle });
         }
         const result = await trouverCleApi(courriel, password);
@@ -110,76 +215,10 @@ const AvoirCleApi = async (req, res) => {
     }
 };
 
-const AjouterSousTache = async (req, res) => {
-    const { tache_id } = req.params;
-    const { titre, complete } = req.body;
-    try {
-        await ajouterSousTache(tache_id, titre, complete);
-        const tache = await afficherTacheAvecSousTaches(tache_id);
-        res.status(201).json(tache);
-    } catch (err) {
-        console.error("Erreur dans AjouterSousTache :", err);
-        res.status(500).json({ message: "Erreur lors de l'ajout de la sous-tâche" });
-    }
-};
-
-const ModifierSousTache = async (req, res) => {
-    const utilisateur_id = req.id;
-    const { titre, complete } = req.body;
-    try {
-        const sousTache = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [id]);
-        await modifierSousTache({ utilisateur_id, titre, complete });
-        if (sousTache.rows.length > 0) {
-            const tache = await afficherTacheAvecSousTaches(sousTache.rows[0].tache_id);
-            res.status(200).json(tache);
-        } else {
-            res.status(200).json({ message: "Sous-tâche modifiée" });
-        }
-    } catch (err) {
-        console.error("Erreur dans ModifierSousTache :", err);
-        res.status(500).json({ message: "Erreur lors de la modification de la sous-tâche" });
-    }
-};
-
-const ModifierStatutSousTache = async (req, res) => {
-    const utilisateur_id = req.id;
-    const { complete } = req.body;
-    try {
-        const sousTache = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [id]);
-        await modifierStatutSousTache(utilisateur_id, complete);
-        if (sousTache.rows.length > 0) {
-            const tache = await afficherTacheAvecSousTaches(sousTache.rows[0].tache_id);
-            res.status(200).json(tache);
-        } else {
-            res.status(200).json({ message: "Statut de la sous-tâche mis à jour" });
-        }
-    } catch (err) {
-        console.error("Erreur dans ModifierStatutSousTache :", err);
-        res.status(500).json({ message: "Erreur lors de la mise à jour du statut de la sous-tâche" });
-    }
-};
-
-const SupprimerSousTache = async (req, res) => {
-    const utilisateur_id = req.id;
-    try {
-        const sousTache = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [utilisateur_id]);
-        await db.query('DELETE FROM sous_taches WHERE id = $1', [utilisateur_id]);
-        if (sousTache.rows.length > 0) {
-            const tache = await afficherTacheAvecSousTaches(sousTache.rows[0].tache_id);
-            res.status(200).json(tache);
-        } else {
-            res.status(200).json({ message: "Sous-tâche supprimée" });
-        }
-    } catch (err) {
-        console.error("Erreur dans SupprimerSousTache :", err);
-        res.status(500).json({ message: "Erreur lors de la suppression de la sous-tâche" });
-    }
-};
-
 export {
-    ListeTacheParUser, AfficherTache,
+    ListeTacheParUtilisateur, AfficherTache,
     AjouterTache, ModifierTache,
-    ModifierSTache, SupprimerTache,
+    ModifierStatutTache, SupprimerTache,
     AjouterUtilisateur, AvoirCleApi,
     AjouterSousTache, ModifierSousTache,
     ModifierStatutSousTache, SupprimerSousTache

@@ -1,7 +1,7 @@
 import express from 'express';
 import {
-    ListeTacheParUser, AfficherTache, AjouterTache, ModifierTache,
-    ModifierSTache, SupprimerTache, AjouterUtilisateur, AvoirCleApi,
+    ListeTacheParUtilisateur, AfficherTache, AjouterTache, ModifierTache,
+    ModifierStatutTache, SupprimerTache, AjouterUtilisateur, AvoirCleApi,
     AjouterSousTache, ModifierSousTache, SupprimerSousTache, ModifierStatutSousTache
 } from "../controllers/taches.controller.js";
 import authentification from "../middlewares/authentification.middleware.js";
@@ -13,8 +13,9 @@ Afficher toutes les tâches de l'usager
 Par défaut seulement les tâches incomplètes seront affichées mais vous devez permettre
 l’option de les afficher toutes
 **Clé API requise**
+header: termine = 1 pour afficher toutes les taches, rien pour seulement les taches non-complétés
 */
-router.get('/taches', authentification, ListeTacheParUser);
+router.get('/taches', authentification, ListeTacheParUtilisateur);
 
 /*
 Afficher le détail d'une tâche
@@ -35,7 +36,7 @@ router.put('/taches/:id', authentification, ModifierTache);
 
 // Modifier le statut d'une tâche
 // **Clé API requise**
-router.patch('/taches/:id/statut', authentification, ModifierSTache);
+router.patch('/taches/:id/statut', authentification, ModifierStatutTache);
 
 // Supprimer une tâche
 // **Clé API requise**
