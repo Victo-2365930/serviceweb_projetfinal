@@ -159,7 +159,6 @@ const ModifierStatutSousTache = async (req, res) => {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
         }
     } catch (err) {
-        console.error("Erreur dans ModifierStatutSousTache :", err);
         res.status(500).json({ message: "Erreur lors de la mise à jour du statut de la sous-tâche" });
     }
 };
@@ -181,7 +180,6 @@ const SupprimerSousTache = async (req, res) => {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
         }
     } catch (err) {
-        console.error("Erreur dans SupprimerSousTache :", err);
         res.status(500).json({ message: "Erreur lors de la suppression de la sous-tâche" });
     }
 };
@@ -193,7 +191,6 @@ const AjouterUtilisateur = async (req, res) => {
         const result = await ajouterUtilisateur(nom, prenom, courriel, password, cle_api);
         res.status(201).json({ cle_api: result.rows[0].cle_api });
     } catch (err) {
-        console.error("Erreur dans AjouterUtilisateur :", err);
         res.status(500).json({ message: "Erreur lors de la création de l'utilisateur" });
     }
 };
@@ -210,7 +207,6 @@ const AvoirCleApi = async (req, res) => {
         if (result.rows.length === 0) return res.status(401).json({ message: "Identifiants invalides" });
         res.status(200).json({ cle_api: result.rows[0].cle_api });
     } catch (err) {
-        console.error("Erreur dans AvoirCleApi :", err);
         res.status(500).json({ message: "Erreur lors de la récupération de la clé api" });
     }
 };

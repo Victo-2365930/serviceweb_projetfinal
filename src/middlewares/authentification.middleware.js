@@ -7,7 +7,7 @@ const authentification = (req, res, next) => {
         return res.status(401).json({ message: "Vous devez fournir une clé api" });
     }
 
-    // Récupérer la clé API  (28 caractères random)
+    // Récupérer la clé API  (28 caractères aléatoires)
     const cleApi = req.headers.authorization;
 
     // Vérifier si la clé API est valide
@@ -16,7 +16,6 @@ const authentification = (req, res, next) => {
             if (!resultat) {
                 return res.status(401).json({ message: "Clé API invalide" });
             } else {
-                // Clé API valide : on garde le ID
                 req.id = resultat.id;
                 next();
                 return;
