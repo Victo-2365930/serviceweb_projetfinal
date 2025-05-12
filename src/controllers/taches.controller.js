@@ -14,7 +14,7 @@ const ListeTacheParUser = async (req, res) => {
     const utilisateur_id = req.id;
     const termine = req.query.termine;
     try {
-        const liste = await listerTachesUtilisateur(utilisateur, termine);
+        const liste = await listerTachesUtilisateur(utilisateur_id, termine);
         res.status(200).json(liste);
     } catch (err) {
         console.error("Erreur dans ListeTacheParUser :", err);
@@ -25,7 +25,7 @@ const ListeTacheParUser = async (req, res) => {
 const AfficherTache = async (req, res) => {
     const utilisateur_id = req.id;
     try {
-        const tache = await afficherTacheAvecSousTaches(id);
+        const tache = await afficherTacheAvecSousTaches(utilisateur_id);
         if (!tache) return res.status(404).json({ message: "Tâche non trouvée" });
         res.status(200).json(tache);
     } catch (err) {
@@ -50,7 +50,7 @@ const ModifierTache = async (req, res) => {
     const utilisateur_id = req.id;
     const { titre, description, date_debut, date_echeance } = req.body;
     try {
-        await modifierTache({ id, titre, description, date_debut, date_echeance });
+        await modifierTache({ utilisateur_id, titre, description, date_debut, date_echeance });
         res.status(200).json({ message: "Tâche modifiée" });
     } catch (err) {
         console.error("Erreur dans ModifierTache :", err);
@@ -62,7 +62,7 @@ const ModifierSTache = async (req, res) => {
     const utilisateur_id = req.id;
     const { complete } = req.body;
     try {
-        await modifierStatutTache(id, complete);
+        await modifierStatutTache(utilisateur_id, complete);
         res.status(200).json({ message: "Statut de la tâche mis à jour" });
     } catch (err) {
         console.error("Erreur dans ModifierSTache :", err);
@@ -73,7 +73,7 @@ const ModifierSTache = async (req, res) => {
 const SupprimerTache = async (req, res) => {
     const utilisateur_id = req.id;
     try {
-        await supprimerTache(id);
+        await supprimerTache(utilisateur_id);
         res.status(200).json({ message: "Tâche supprimée" });
     } catch (err) {
         console.error("Erreur dans SupprimerTache :", err);
