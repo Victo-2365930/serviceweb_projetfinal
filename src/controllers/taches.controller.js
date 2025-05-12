@@ -3,7 +3,7 @@ import {
     ajouterSousTache, modifierTache,
     modifierStatutTache, modifierStatutSousTache,
     supprimerTache, afficherTacheAvecSousTaches,
-    ajouterUtilisateur, trouverCleApi,
+    ajouterUtilisateur, trouverCleApi,modifierSousTache,
     verifierProprietaireTache, verifierProprietaireSousTache
 } from "../models/taches.models.js";
 

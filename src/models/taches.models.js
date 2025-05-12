@@ -17,17 +17,17 @@ const listerTachesUtilisateur = (utilisateurID, termine) => {
 
 const afficherTacheAvecSousTaches = (id) => {
     return new Promise((resolve, reject) => {
-        db.query('SELECT * FROM taches WHERE id = $1', [id], (err1, res1) => {
-            if (err1) {
-                console.log(`Erreur sqlState ${err1.sqlState} : ${err1.message}`);
-                return reject(err1);
+        db.query('SELECT * FROM taches WHERE id = $1', [id], (erreur, res1) => {
+            if (erreur) {
+                console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
+                return reject(erreur);
             }
             if (res1.rows.length === 0) return resolve(null);
 
-            db.query('SELECT * FROM sous_taches WHERE tache_id = $1', [id], (err2, res2) => {
-                if (err2) {
-                    console.log(`Erreur sqlState ${err2.sqlState} : ${err2.message}`);
-                    return reject(err2);
+            db.query('SELECT * FROM sous_taches WHERE tache_id = $1', [id], (erreur2, res2) => {
+                if (erreur2) {
+                    console.log(`Erreur sqlState ${erreur2.sqlState} : ${erreur2.message}`);
+                    return reject(erreur2);
                 }
                 const resultat = res1.rows[0];
                 resultat.sous_taches = res2.rows;
