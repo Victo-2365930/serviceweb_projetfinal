@@ -41,12 +41,12 @@ const afficherTacheAvecSousTaches = (id) => {
 
 const ajouterTache = (tache) => {
     return new Promise((resolve, reject) => {
-        const { utilisateur_id, titre, description, date_debut, date_echeance, complete } = tache;
+        const { utilisateur_id, titre, description, date_debut, date_echeance} = tache;
         const requete = `
-            INSERT INTO taches (utilisateur_id, titre, description, date_debut, date_echeance, complete)
+            INSERT INTO taches (utilisateur_id, titre, description, date_debut, date_echeance)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
-        const valeurs = [utilisateur_id, titre, description, date_debut, date_echeance, complete];
+        const valeurs = [utilisateur_id, titre, description, date_debut, date_echeance, false];
         db.query(requete, valeurs, (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
@@ -74,7 +74,7 @@ const modifierTache = ({ id, titre, description, date_debut, date_echeance }) =>
     });
 };
 
-const modifierStatutTache = (id, complete) => {
+const modifierStatutTache = (id) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE taches
@@ -111,13 +111,13 @@ const supprimerTache = (id) => {
 
 //CRUD Sous-tâche
 
-const ajouterSousTache = (tache_id, titre, complete) => {
+const ajouterSousTache = (tache_id, titre) => {
     return new Promise((resolve, reject) => {
         const requete = `
             INSERT INTO sous_taches (tache_id, titre, complete)
             VALUES ($1, $2, $3)
         `;
-        db.query(requete, [tache_id, titre, complete], (erreur, resultat) => {
+        db.query(requete, [tache_id, titre, false], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
@@ -131,10 +131,10 @@ const modifierSousTache = ({ id, titre }) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE sous_taches
-            SET titre = $1, complete = $3
+            SET titre = $1
             WHERE id = $2
         `;
-        db.query(requete, [titre, id, "false"], (erreur, resultat) => {
+        db.query(requete, [titre, id], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
@@ -271,6 +271,27 @@ const verifierProprietaireSousTache = (sousTacheId, utilisateurId) => {
     });
 };
 
+const recupererTacheIdSousTache = (sousTacheId) => {
+    return new Promise((resolve, reject) => {
+        const requete = `
+            SELECT tache_id
+            FROM sous_taches
+            WHERE id = $1
+        `;
+        db.query(requete, [sousTacheId], (erreur, resultat) => {
+            if (erreur) {
+                console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
+                return reject(erreur);
+            }
+            if (resultat.rows.length > 0) {
+                resolve(resultat.rows[0].tache_id);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+
 export {
     listerTachesUtilisateur, ajouterTache,
     ajouterSousTache, modifierTache,
@@ -279,5 +300,6 @@ export {
     supprimerSousTache, afficherTacheAvecSousTaches,
     ajouterUtilisateur, trouverCleApi,
     ValidationCle, verifierProprietaireTache,
-    verifierProprietaireSousTache
+    verifierProprietaireSousTache,
+    recupererTacheIdSousTache
 };

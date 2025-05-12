@@ -3,8 +3,9 @@ import {
     ajouterSousTache, modifierTache,
     modifierStatutTache, modifierStatutSousTache,
     supprimerTache, afficherTacheAvecSousTaches,
-    ajouterUtilisateur, trouverCleApi,modifierSousTache,
-    verifierProprietaireTache, verifierProprietaireSousTache
+    ajouterUtilisateur, trouverCleApi, modifierSousTache,
+    verifierProprietaireTache, verifierProprietaireSousTache,
+    recupererTacheIdSousTache
 } from "../models/taches.models.js";
 
 import { createRandomString } from "../utils/generercleapi.js";
@@ -103,6 +104,7 @@ const SupprimerTache = async (req, res) => {
 const AjouterSousTache = async (req, res) => {
     const { tache_id } = req.params;
     const utilisateur_id = req.id;
+    const { titre } = req.body;
     try {
         const estProprietaire = await verifierProprietaireTache(tache_id, utilisateur_id);
         if (!estProprietaire) {
@@ -120,16 +122,16 @@ const AjouterSousTache = async (req, res) => {
 const ModifierSousTache = async (req, res) => {
     const sousTacheId = req.params.id;
     const utilisateur_id = req.id;
-    const { titre, complete } = req.body;
+    const { titre } = req.body;
     try {
         const estProprietaire = await verifierProprietaireSousTache(sousTacheId, utilisateur_id);
         if (!estProprietaire) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier cette sous-tâche." });
         }
-        const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
-        if (sousTacheInfo.rows.length > 0) {
-            await modifierSousTache({ id: sousTacheId, titre, complete });
-            const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
+        const tacheId = await recupererTacheIdSousTache(sousTacheId);
+        if (tacheId) {
+            await modifierSousTache({ id: sousTacheId, titre});
+            const tache = await afficherTacheAvecSousTaches(tacheId);
             res.status(200).json(tache);
         } else {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
@@ -148,10 +150,10 @@ const ModifierStatutSousTache = async (req, res) => {
         if (!estProprietaire) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier le statut de cette sous-tâche." });
         }
-        const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
-        if (sousTacheInfo.rows.length > 0) {
+        const tacheId = await recupererTacheIdSousTache(sousTacheId);
+        if (tacheId) {
             await modifierStatutSousTache(parseInt(sousTacheId));
-            const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
+            const tache = await afficherTacheAvecSousTaches(tacheId);
             res.status(200).json(tache);
         } else {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
@@ -170,10 +172,10 @@ const SupprimerSousTache = async (req, res) => {
         if (!estProprietaire) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à supprimer cette sous-tâche." });
         }
-        const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
-        if (sousTacheInfo.rows.length > 0) {
+        const tacheId = await recupererTacheIdSousTache(sousTacheId);
+        if (tacheId) {
             await supprimerSousTache(sousTacheId);
-            const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
+            const tache = await afficherTacheAvecSousTaches(tacheId);
             res.status(200).json(tache);
         } else {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
