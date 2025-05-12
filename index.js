@@ -19,9 +19,10 @@ app.listen(PORT, () => {
 
 /*
 1) Hasher les mots de passe
-2) Faire en sorte que tout ce qui touche au tâche le soit par l'utilisateur même (Need?)
+2) OK  Faire en sorte que tout ce qui touche au tâche le soit par l'utilisateur même (Need?)
 3) Faire tous les tests POSTMAN
-4) Interface de gesƟon des uƟlisateurs
+4) Faire les logs d'erreurs 500 dans un fichier.
+5) Interface de gesƟon des uƟlisateurs
 - Vous devez créer une page HTML avec un script JavaScript qui fournit une interface
 permeƩant de :
 o Créer un nouvel uƟlisateur

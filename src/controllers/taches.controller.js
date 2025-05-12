@@ -103,13 +103,12 @@ const SupprimerTache = async (req, res) => {
 const AjouterSousTache = async (req, res) => {
     const { tache_id } = req.params;
     const utilisateur_id = req.id;
-    const { titre, complete } = req.body;
     try {
         const estProprietaire = await verifierProprietaireTache(tache_id, utilisateur_id);
         if (!estProprietaire) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à ajouter une sous-tâche à cette tâche." });
         }
-        await ajouterSousTache(tache_id, titre, complete);
+        await ajouterSousTache(tache_id, titre);
         const tache = await afficherTacheAvecSousTaches(tache_id);
         res.status(201).json(tache);
     } catch (err) {
