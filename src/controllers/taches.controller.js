@@ -150,7 +150,7 @@ const ModifierStatutSousTache = async (req, res) => {
         }
         const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
         if (sousTacheInfo.rows.length > 0) {
-            await modifierStatutSousTache(sousTacheId);
+            await modifierStatutSousTache(parseInt(sousTacheId));
             const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
             res.status(200).json(tache);
         } else {

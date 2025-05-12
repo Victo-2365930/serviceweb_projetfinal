@@ -252,10 +252,10 @@ const verifierProprietaireTache = (tacheId, utilisateurId) => {
 const verifierProprietaireSousTache = (sousTacheId, utilisateurId) => {
     return new Promise((resolve, reject) => {
         const requete = `
-            SELECT t.utilisateur_id
-            FROM sous_taches st
-            JOIN taches t ON st.tache_id = t.id
-            WHERE st.id = $1
+            SELECT taches.utilisateur_id
+            FROM sous_taches
+            JOIN taches ON sous_taches.tache_id = taches.id
+            WHERE sous_taches.id = $1
         `;
         db.query(requete, [sousTacheId], (erreur, resultat) => {
             if (erreur) {
