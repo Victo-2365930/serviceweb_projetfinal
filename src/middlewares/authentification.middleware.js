@@ -22,7 +22,6 @@ const authentification = (req, res, next) => {
             }
         })
         .catch(erreur => {
-            console.error(`Erreur SQL ${erreur.code} lors de la validation de la clé API. State: ${erreur.sqlState}, message: ${erreur.message}`);
             return res.status(500).json({ message: "Erreur lors de la validation de la clé api" });
         });
 };

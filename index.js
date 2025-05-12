@@ -12,7 +12,7 @@ app.use('/', methoderoutes);
 
 // Middleware Morgan
 app.use((err, req, res, next) => {
-  console.error(`500 Error - ${req.method} ${req.originalUrl}`);
+  console.error(`Erreur 500 - ${req.method} ${req.originalUrl}`);
   console.error(err.stack);
   res.status(500).json({ message: "Une erreur est survenue sur le serveur." });
 });
