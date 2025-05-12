@@ -11,7 +11,7 @@ import { createRandomString } from "../utils/generercleapi.js";
 import db from '../config/db.js';
 
 const ListeTacheParUser = async (req, res) => {
-    const utilisateur = req.query.utilisateur;
+    const utilisateur_id = req.id;
     const termine = req.query.termine;
     try {
         const liste = await listerTachesUtilisateur(utilisateur, termine);
@@ -23,7 +23,7 @@ const ListeTacheParUser = async (req, res) => {
 };
 
 const AfficherTache = async (req, res) => {
-    const { id } = req.params;
+    const utilisateur_id = req.id;
     try {
         const tache = await afficherTacheAvecSousTaches(id);
         if (!tache) return res.status(404).json({ message: "Tâche non trouvée" });
@@ -35,7 +35,8 @@ const AfficherTache = async (req, res) => {
 };
 
 const AjouterTache = async (req, res) => {
-    const { utilisateur_id, titre, description, date_debut, date_echeance, complete } = req.body;
+    const { titre, description, date_debut, date_echeance, complete } = req.body;
+    const utilisateur_id = req.id;
     try {
         await ajouterTache({ utilisateur_id, titre, description, date_debut, date_echeance, complete });
         res.status(201).json({ message: "Tâche ajoutée" });
@@ -46,7 +47,7 @@ const AjouterTache = async (req, res) => {
 };
 
 const ModifierTache = async (req, res) => {
-    const { id } = req.params;
+    const utilisateur_id = req.id;
     const { titre, description, date_debut, date_echeance } = req.body;
     try {
         await modifierTache({ id, titre, description, date_debut, date_echeance });
@@ -58,7 +59,7 @@ const ModifierTache = async (req, res) => {
 };
 
 const ModifierSTache = async (req, res) => {
-    const { id } = req.params;
+    const utilisateur_id = req.id;
     const { complete } = req.body;
     try {
         await modifierStatutTache(id, complete);
@@ -70,7 +71,7 @@ const ModifierSTache = async (req, res) => {
 };
 
 const SupprimerTache = async (req, res) => {
-    const { id } = req.params;
+    const utilisateur_id = req.id;
     try {
         await supprimerTache(id);
         res.status(200).json({ message: "Tâche supprimée" });
@@ -123,11 +124,11 @@ const AjouterSousTache = async (req, res) => {
 };
 
 const ModifierSousTache = async (req, res) => {
-    const { id } = req.params;
+    const utilisateur_id = req.id;
     const { titre, complete } = req.body;
     try {
         const sousTache = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [id]);
-        await modifierSousTache({ id, titre, complete });
+        await modifierSousTache({ utilisateur_id, titre, complete });
         if (sousTache.rows.length > 0) {
             const tache = await afficherTacheAvecSousTaches(sousTache.rows[0].tache_id);
             res.status(200).json(tache);
@@ -141,11 +142,11 @@ const ModifierSousTache = async (req, res) => {
 };
 
 const ModifierStatutSousTache = async (req, res) => {
-    const { id } = req.params;
+    const utilisateur_id = req.id;
     const { complete } = req.body;
     try {
         const sousTache = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [id]);
-        await modifierStatutSousTache(id, complete);
+        await modifierStatutSousTache(utilisateur_id, complete);
         if (sousTache.rows.length > 0) {
             const tache = await afficherTacheAvecSousTaches(sousTache.rows[0].tache_id);
             res.status(200).json(tache);
@@ -159,10 +160,10 @@ const ModifierStatutSousTache = async (req, res) => {
 };
 
 const SupprimerSousTache = async (req, res) => {
-    const { id } = req.params;
+    const utilisateur_id = req.id;
     try {
-        const sousTache = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [id]);
-        await db.query('DELETE FROM sous_taches WHERE id = $1', [id]);
+        const sousTache = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [utilisateur_id]);
+        await db.query('DELETE FROM sous_taches WHERE id = $1', [utilisateur_id]);
         if (sousTache.rows.length > 0) {
             const tache = await afficherTacheAvecSousTaches(sousTache.rows[0].tache_id);
             res.status(200).json(tache);

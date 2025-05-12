@@ -46,7 +46,7 @@ const ajouterSousTache = (tache_id, titre, complete) => {
 const modifierTache = ({ id, titre, description, date_debut, date_echeance }) => {
     return new Promise((resolve, reject) => {
         const requete = `UPDATE taches SET titre = $1, description = $2, date_debut = $3, date_echeance = $4 WHERE id = $5`;
-        db.query(requete, [titre, description, date_debut, date_echeance, id], (erreur, resultat) => {
+        db.query(requete, [titre, description, date_debut, date_echeance, requete.id], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
