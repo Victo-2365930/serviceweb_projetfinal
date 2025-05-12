@@ -78,10 +78,10 @@ const modifierStatutTache = (id, complete) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE taches
-            SET complete = $1
-            WHERE id = $2
+            SET complete = NOT complete
+            WHERE id = $1
         `;
-        db.query(requete, [complete, id], (erreur, resultat) => {
+        db.query(requete, [id], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
@@ -127,7 +127,7 @@ const ajouterSousTache = (tache_id, titre, complete) => {
     });
 };
 
-const modifierSousTache = ({ id, titre, complete }) => {
+const modifierSousTache = ({ id, titre }) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE sous_taches
@@ -144,14 +144,14 @@ const modifierSousTache = ({ id, titre, complete }) => {
     });
 };
 
-const modifierStatutSousTache = (id, complete) => {
+const modifierStatutSousTache = (id) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE sous_taches
-            SET complete = $1
-            WHERE id = $2
+            SET complete = NOT complete
+            WHERE id = $1
         `;
-        db.query(requete, [complete, id], (erreur, resultat) => {
+        db.query(requete, [id], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);

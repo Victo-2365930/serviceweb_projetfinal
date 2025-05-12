@@ -76,7 +76,7 @@ const ModifierStatutTache = async (req, res) => {
         if (!estProprietaire) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier cette tâche." });
         }
-        await modifierStatutTache(tacheId, complete);
+        await modifierStatutTache(tacheId);
         res.status(200).json({ message: "Statut de la tâche mis à jour" });
     } catch (err) {
         console.error("Erreur dans ModifierSTache :", err);
@@ -143,7 +143,6 @@ const ModifierSousTache = async (req, res) => {
 const ModifierStatutSousTache = async (req, res) => {
     const sousTacheId = req.params.id;
     const utilisateur_id = req.id;
-    const { complete } = req.body;
     try {
         const estProprietaire = await verifierProprietaireSousTache(sousTacheId, utilisateur_id);
         if (!estProprietaire) {
@@ -151,7 +150,7 @@ const ModifierStatutSousTache = async (req, res) => {
         }
         const sousTacheInfo = await db.query('SELECT tache_id FROM sous_taches WHERE id = $1', [sousTacheId]);
         if (sousTacheInfo.rows.length > 0) {
-            await modifierStatutSousTache(sousTacheId, complete);
+            await modifierStatutSousTache(sousTacheId);
             const tache = await afficherTacheAvecSousTaches(sousTacheInfo.rows[0].tache_id);
             res.status(200).json(tache);
         } else {
