@@ -2,16 +2,18 @@ import express from 'express';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
+import cors from 'cors';
 
 const app = express();
+
+//Accepter les requetes de localhost//test
+app.use(cors({
+  origin: 'http://localhost'
+}));
 
 // Middlewares
 app.use(express.json());
 app.use(morgan('dev'));
-//Accepter les requetes de loclhost//test
-app.use(cors({
-  origin: 'http://localhost'
-}));
 
 // Importer les routes
 import methoderoutes from './src/routes/taches.routes.js';
