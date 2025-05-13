@@ -212,7 +212,6 @@ const AvoirCleApi = async (req, res) => {
         res.status(200).json({ cle_api });
 
     } catch (err) {
-        console.error(err);
         res.status(500).json({ message: "Erreur lors de la récupération de la clé api" });
     }
 };

@@ -28,8 +28,6 @@ app.listen(PORT, () => {
 Problèmes:
 Sous-taches, faire que ça vérifier le user
 À faire:
-1) Hasher les mots de passe
-2) Faire tous les tests POSTMAN
 3) Interface de gesƟon des uƟlisateurs
 - Vous devez créer une page HTML avec un script JavaScript qui fournit une interface
 permeƩant de :
