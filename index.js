@@ -25,11 +25,12 @@ app.listen(PORT, () => {
 
 
 /*
+Problèmes:
+Sous-taches, faire que ça vérifier le user
+À faire:
 1) Hasher les mots de passe
-2) OK  Faire en sorte que tout ce qui touche au tâche le soit par l'utilisateur même (Need?)
-3) Faire tous les tests POSTMAN
-4) Faire les logs d'erreurs 500 dans un fichier.
-5) Interface de gesƟon des uƟlisateurs
+2) Faire tous les tests POSTMAN
+3) Interface de gesƟon des uƟlisateurs
 - Vous devez créer une page HTML avec un script JavaScript qui fournit une interface
 permeƩant de :
 o Créer un nouvel uƟlisateur
@@ -38,6 +39,6 @@ o Récupérer ou régénérer une nouvelle clé api.
 uƟlisateurs de votre api.
 - Vous trouverez à l’annexe B un « wireframe » de la page à créer. Vous devez vous le
 reproduire le plus fidèlement possible.
-5)Doc (DO I even have time!?!?)
+4)Doc (DO I even have time!?!?)
 
 */

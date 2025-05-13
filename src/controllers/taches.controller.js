@@ -4,16 +4,17 @@ import {
     modifierStatutTache, modifierStatutSousTache,
     supprimerTache, afficherTacheAvecSousTaches,
     ajouterUtilisateur, trouverCleApi, modifierSousTache,
-    verifierProprietaireTache, verifierProprietaireSousTache,
-    recupererTacheIdSousTache
+    supprimerSousTache, verifierProprietaireTache, 
+    verifierProprietaireSousTache, recupererTacheIdSousTache
 } from "../models/taches.models.js";
 
-import { createRandomString } from "../utils/generercleapi.js";
+import createRandomString from "../utils/generercleapi.js";
 import db from '../config/db.js';
+import bcrypt from "bcrypt";
 
 const ListeTacheParUtilisateur = async (req, res) => {
     const utilisateur_id = req.id;
-    const termine = req.query.termine;
+    const termine = req.query.termine; // Si == inclure les tâches terminées
     try {
         const liste = await listerTachesUtilisateur(utilisateur_id, termine);
         res.status(200).json(liste);
@@ -38,10 +39,10 @@ const AfficherTache = async (req, res) => {
 };
 
 const AjouterTache = async (req, res) => {
-    const { titre, description, date_debut, date_echeance, complete } = req.body;
+    const { titre, description, date_debut, date_echeance } = req.body;
     const utilisateur_id = req.id;
     try {
-        await ajouterTache({ utilisateur_id, titre, description, date_debut, date_echeance, complete });
+        await ajouterTache({ utilisateur_id, titre, description, date_debut, date_echeance });
         res.status(201).json({ message: "Tâche ajoutée" });
     } catch (err) {
         res.status(500).json({ message: "Erreur lors de l'ajout de la tâche" });
@@ -57,7 +58,7 @@ const ModifierTache = async (req, res) => {
         if (!estProprietaire) {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à modifier cette tâche." });
         }
-        await modifierTache({ id: tacheId, titre, description, date_debut, date_echeance });
+        await modifierTache({ tacheId, titre, description, date_debut, date_echeance });
         res.status(200).json({ message: "Tâche modifiée" });
     } catch (err) {
         res.status(500).json({ message: "Erreur lors de la modification" });
@@ -67,7 +68,6 @@ const ModifierTache = async (req, res) => {
 const ModifierStatutTache = async (req, res) => {
     const tacheId = req.params.id;
     const utilisateur_id = req.id;
-    const { complete } = req.body;
     try {
         const estProprietaire = await verifierProprietaireTache(tacheId, utilisateur_id);
         if (!estProprietaire) {
@@ -105,8 +105,7 @@ const AjouterSousTache = async (req, res) => {
             return res.status(403).json({ message: "Vous n'êtes pas autorisé à ajouter une sous-tâche à cette tâche." });
         }
         await ajouterSousTache(tache_id, titre);
-        const tache = await afficherTacheAvecSousTaches(tache_id);
-        res.status(201).json(tache);
+        res.status(201).json({ message: "Sous-tâche ajoutée avec succès" });
     } catch (err) {
         res.status(500).json({ message: "Erreur lors de l'ajout de la sous-tâche" });
     }
@@ -123,9 +122,8 @@ const ModifierSousTache = async (req, res) => {
         }
         const tacheId = await recupererTacheIdSousTache(sousTacheId);
         if (tacheId) {
-            await modifierSousTache({ id: sousTacheId, titre});
-            const tache = await afficherTacheAvecSousTaches(tacheId);
-            res.status(200).json(tache);
+            await modifierSousTache({ sousTacheId, titre});
+            res.status(200).json({ message: "Sous-tâche modifiée avec succès" });
         } else {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
         }
@@ -144,9 +142,8 @@ const ModifierStatutSousTache = async (req, res) => {
         }
         const tacheId = await recupererTacheIdSousTache(sousTacheId);
         if (tacheId) {
-            await modifierStatutSousTache(parseInt(sousTacheId));
-            const tache = await afficherTacheAvecSousTaches(tacheId);
-            res.status(200).json(tache);
+            await modifierStatutSousTache(sousTacheId);
+            res.status(200).json({ message: "Statut de la sous-tâche mis à jour" });
         } else {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
         }
@@ -166,8 +163,7 @@ const SupprimerSousTache = async (req, res) => {
         const tacheId = await recupererTacheIdSousTache(sousTacheId);
         if (tacheId) {
             await supprimerSousTache(sousTacheId);
-            const tache = await afficherTacheAvecSousTaches(tacheId);
-            res.status(200).json(tache);
+            res.status(200).json({ message: "Sous-tâche supprimée avec succès." });
         } else {
             res.status(404).json({ message: "Sous-tâche non trouvée." });
         }
@@ -180,7 +176,8 @@ const AjouterUtilisateur = async (req, res) => {
     const { nom, prenom, courriel, password } = req.body;
     const cle_api = createRandomString();
     try {
-        const result = await ajouterUtilisateur(nom, prenom, courriel, password, cle_api);
+        const hash = await bcrypt.hash(password, 10);
+        const result = await ajouterUtilisateur(nom, prenom, courriel, hash, cle_api);
         res.status(201).json({ cle_api: result.rows[0].cle_api });
     } catch (err) {
         res.status(500).json({ message: "Erreur lors de la création de l'utilisateur" });
@@ -188,16 +185,22 @@ const AjouterUtilisateur = async (req, res) => {
 };
 
 const AvoirCleApi = async (req, res) => {
-    const { courriel, password, regen } = req.query;
+    const { courriel, password, regen } = req.body;
     try {
-        if (regen == '1') {
+        const result = await trouverCleApi(courriel);
+        if (result.rows.length === 0) return res.status(401).json({ message: "Identifiants invalides" });
+
+        const utilisateur = result.rows[0];
+        const passwordOk = await bcrypt.compare(password, utilisateur.password);
+        if (!passwordOk) return res.status(401).json({ message: "Identifiants invalides" });
+
+        if (regen === 'true') {
             const nouvelleCle = createRandomString();
-            await db.query('UPDATE utilisateurs SET cle_api = $1 WHERE courriel = $2 AND password = $3', [nouvelleCle, courriel, password]);
+            await db.query('UPDATE utilisateurs SET cle_api = $1 WHERE id = $2', [nouvelleCle, utilisateur.id]);
             return res.status(200).json({ cle_api: nouvelleCle });
         }
-        const result = await trouverCleApi(courriel, password);
-        if (result.rows.length === 0) return res.status(401).json({ message: "Identifiants invalides" });
-        res.status(200).json({ cle_api: result.rows[0].cle_api });
+
+        res.status(200).json({ cle_api: utilisateur.cle_api });
     } catch (err) {
         res.status(500).json({ message: "Erreur lors de la récupération de la clé api" });
     }

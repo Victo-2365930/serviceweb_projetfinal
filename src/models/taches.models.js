@@ -37,7 +37,7 @@ const afficherTacheAvecSousTaches = (id) => {
     });
 };
 
-//CRUD Tâches
+//Méthodes pour les *Tâches*
 
 const ajouterTache = (tache) => {
     return new Promise((resolve, reject) => {
@@ -57,14 +57,14 @@ const ajouterTache = (tache) => {
     });
 };
 
-const modifierTache = ({ id, titre, description, date_debut, date_echeance }) => {
+const modifierTache = ({ tacheId, titre, description, date_debut, date_echeance }) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE taches
             SET titre = $1, description = $2, date_debut = $3, date_echeance = $4
             WHERE id = $5
         `;
-        db.query(requete, [titre, description, date_debut, date_echeance, id], (erreur, resultat) => {
+        db.query(requete, [titre, description, date_debut, date_echeance, tacheId], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
@@ -109,7 +109,7 @@ const supprimerTache = (id) => {
     });
 };
 
-//CRUD Sous-tâche
+//Méthodes pour les *Sous-tâches*
 
 const ajouterSousTache = (tache_id, titre) => {
     return new Promise((resolve, reject) => {
@@ -127,14 +127,14 @@ const ajouterSousTache = (tache_id, titre) => {
     });
 };
 
-const modifierSousTache = ({ id, titre }) => {
+const modifierSousTache = ({ sousTacheId, titre }) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE sous_taches
             SET titre = $1
             WHERE id = $2
         `;
-        db.query(requete, [titre, id], (erreur, resultat) => {
+        db.query(requete, [titre, sousTacheId], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
@@ -144,14 +144,14 @@ const modifierSousTache = ({ id, titre }) => {
     });
 };
 
-const modifierStatutSousTache = (id) => {
+const modifierStatutSousTache = (sousTacheId) => {
     return new Promise((resolve, reject) => {
         const requete = `
             UPDATE sous_taches
             SET complete = NOT complete
             WHERE id = $1
         `;
-        db.query(requete, [id], (erreur, resultat) => {
+        db.query(requete, [sousTacheId], (erreur, resultat) => {
             if (erreur) {
                 console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
                 return reject(erreur);
