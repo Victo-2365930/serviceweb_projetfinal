@@ -87,6 +87,6 @@ En fournissant une adresse courriel et le bon mot de passe le système va retour
 API de l’utilisateur. Un paramètre optionnel permet de générer une nouvelle clé et de la
 retourner à l’utilisateur.
 */
-router.get('/cle-api', AvoirCleApi);
+router.post('/cle-api', AvoirCleApi);
 
 export default router;
