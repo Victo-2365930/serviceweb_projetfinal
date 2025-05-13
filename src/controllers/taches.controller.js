@@ -188,10 +188,11 @@ const AvoirCleApi = async (req, res) => {
     const { courriel, password, regen } = req.body;
     try {
         const result = await trouverCleApi(courriel);
-        if (result.rows.length === 0) return res.status(401).json({ message: "Identifiants invalides" });
+        if (result.rows.length == 0) return res.status(401).json({ message: "Identifiants invalides" });
 
-        const utilisateur = result.rows[0];
-        const passwordOk = await bcrypt.compare(password, utilisateur.password);
+        const utilisateur = result.rows[0].password;
+        const hash = await bcrypt.hash(password, 10);
+        const passwordOk = await bcrypt.compare(hash, utilisateur.password);
         if (!passwordOk) return res.status(401).json({ message: "Identifiants invalides" });
 
         if (regen === 'true') {
