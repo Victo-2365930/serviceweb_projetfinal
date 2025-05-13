@@ -8,7 +8,7 @@ import {
     verifierProprietaireSousTache, recupererTacheIdSousTache
 } from "../models/taches.models.js";
 
-import createRandomString from "../utils/generercleapi.js";
+import {createRandomString} from "../utils/generercleapi.js";
 import db from '../config/db.js';
 import bcrypt from "bcrypt";
 
