@@ -43,7 +43,7 @@ const ajouterTache = (tache) => {
     return new Promise((resolve, reject) => {
         const { utilisateur_id, titre, description, date_debut, date_echeance} = tache;
         const requete = `
-            INSERT INTO taches (utilisateur_id, titre, description, date_debut, date_echeance)
+            INSERT INTO taches (utilisateur_id, titre, description, date_debut, date_echeance, complete)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
         const valeurs = [utilisateur_id, titre, description, date_debut, date_echeance, false];
