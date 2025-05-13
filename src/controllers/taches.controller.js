@@ -6,11 +6,8 @@ import {
     ajouterUtilisateur, trouverUtilisateurParCourriel, modifierSousTache,
     supprimerSousTache, verifierProprietaireTache, 
     verifierProprietaireSousTache, recupererTacheIdSousTache,
-    mettreAJourCleApi
+    mettreAJourCleApi, createRandomString
 } from "../models/taches.models.js";
-
-import {createRandomString} from "../utils/generercleapi.js";
-import db from '../config/db.js';
 import bcrypt from "bcrypt";
 
 const ListeTacheParUtilisateur = async (req, res) => {
