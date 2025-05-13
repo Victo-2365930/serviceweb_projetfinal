@@ -191,8 +191,7 @@ const AvoirCleApi = async (req, res) => {
         if (result.rows.length == 0) return res.status(401).json({ message: "Identifiants invalides" });
 
         const utilisateur = result.rows[0].password;
-        const hash = await bcrypt.hash(password, 10);
-        const passwordOk = await bcrypt.compare(hash, utilisateur.password);
+        const passwordOk = await bcrypt.compare(utilisateur, utilisateur.password);
         if (!passwordOk) return res.status(401).json({ message: "Identifiants invalides" });
 
         if (regen === 'true') {
