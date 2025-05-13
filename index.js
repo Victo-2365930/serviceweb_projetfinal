@@ -1,21 +1,28 @@
 import express from 'express';
 import morgan from 'morgan';
+import fs from 'fs';
+import path from 'path';
+
 const app = express();
 
 // Middlewares
 app.use(express.json());
 app.use(morgan('dev'));
+//Accepter les requetes de loclhost//test
+app.use(cors({
+  origin: 'http://localhost'
+}));
 
 // Importer les routes
 import methoderoutes from './src/routes/taches.routes.js';
 app.use('/', methoderoutes);
 
-// Middleware Morgan
-app.use((err, req, res, next) => {
-  console.error(`Erreur 500 - ${req.method} ${req.originalUrl}`);
-  console.error(err.stack);
-  res.status(500).json({ message: "Une erreur est survenue sur le serveur." });
-});
+// Logger les erreurs 500
+const logMorgan = fs.createWriteStream(path.join('journal_erreur.txt'), { flags: 'a' });
+app.use(morgan('combined', {
+  skip: (req, res) => res.statusCode < 500,
+  stream: logMorgan
+}));
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5432;
