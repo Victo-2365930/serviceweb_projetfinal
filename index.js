@@ -3,8 +3,14 @@ import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 
 const app = express();
+const swaggerDocument = JSON.parse(fs.readFileSync('./src/config/documentation.json', 'utf8'));
+const swaggerOptions = {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Demo API"
+};
 
 /*
 Accepter les requetes de localhost 
@@ -21,6 +27,7 @@ app.use(morgan('dev'));
 // Importer les routes
 import methoderoutes from './src/routes/taches.routes.js';
 app.use('/', methoderoutes);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 
 // Logger les erreurs 500
 const logMorgan = fs.createWriteStream(path.join('journal_erreur.txt'), { flags: 'a' });

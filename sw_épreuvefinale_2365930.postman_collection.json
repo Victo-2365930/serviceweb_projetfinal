@@ -1,0 +1,429 @@
+{
+	"info": {
+		"_postman_id": "5bfcdd95-ae4c-42d9-8142-672d084037f0",
+		"name": "sw_épreuvefinale_2365930",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41180439"
+	},
+	"item": [
+		{
+			"name": "OK)Afficher toutes les tâches de l'usager",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://service-web-api.onrender.com/taches",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"taches"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Afficher le détail d'une tâche",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://service-web-api.onrender.com/taches/2",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"taches",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Ajouter une tâche",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titre\": \"Tâche4\",\r\n  \"description\": \"SKEDADLE\",\r\n  \"date_debut\": \"2025-05-11\",\r\n  \"date_echeance\": \"2025-06-11\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://service-web-api.onrender.com/taches",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"taches"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Modifier une tâche",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titre\": \"M'as aller chasser\",\r\n  \"description\": \"canne à pêche\",\r\n  \"date_debut\" : \"2025-05-12\",\r\n  \"date_echeance\": \"2028-05-15\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://service-web-api.onrender.com/taches/4",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"taches",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Modifier le statut de tâche",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://service-web-api.onrender.com/taches/statut/4",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"taches",
+						"statut",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Supprimer une tâche",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://service-web-api.onrender.com/taches/4",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"taches",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Ajouter une Sous-tâche",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titre\": \"patate chaude\",\r\n  \"complete\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://service-web-api.onrender.com/taches/2/sous-taches",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"taches",
+						"2",
+						"sous-taches"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Modifier une Sous-tâche",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"titre\": \"jambonneau\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://service-web-api.onrender.com/sous-taches/2",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"sous-taches",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Modifier le statut de Sous-tâche",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://service-web-api.onrender.com/sous-taches/statut/2",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"sous-taches",
+						"statut",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Supprimer une Sous-tâche",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "cle1234",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://service-web-api.onrender.com/sous-taches/2",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"sous-taches",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Ajouter un utilisateur",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nom\": \"Fréchette\",\r\n  \"prenom\": \"Mathieu\",\r\n  \"courriel\": \"incroyable@unebonnenote.ca\",\r\n  \"password\": \"motdepasse\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://service-web-api.onrender.com/utilisateurs",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"utilisateurs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK)Récupérer sa clé api ou en redemander une nouvelle",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"courriel\": \"jc3@jc3.ca\",\r\n  \"password\": \"motdepassehash\",\r\n  \"regen\" : \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://service-web-api.onrender.com/cle-api",
+					"protocol": "https",
+					"host": [
+						"service-web-api",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"cle-api"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
