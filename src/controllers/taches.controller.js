@@ -3,7 +3,7 @@ import {
     ajouterSousTache, modifierTache,
     modifierStatutTache, modifierStatutSousTache,
     supprimerTache, afficherTacheAvecSousTaches,
-    ajouterUtilisateur, trouverCleApi, modifierSousTache,
+    ajouterUtilisateur, trouverUtilisateurParCourriel, modifierSousTache,
     supprimerSousTache, verifierProprietaireTache, 
     verifierProprietaireSousTache, recupererTacheIdSousTache
 } from "../models/taches.models.js";
@@ -186,23 +186,32 @@ const AjouterUtilisateur = async (req, res) => {
 
 const AvoirCleApi = async (req, res) => {
     const { courriel, password, regen } = req.body;
-    try {
-        const result = await trouverCleApi(courriel);
-        if (result.rows.length == 0) return res.status(401).json({ message: "Identifiants invalides" });
 
-        const utilisateur = result.rows[0].password;
-        console.log(utilisateur + " - " + password)
-        const passwordOk = await bcrypt.compare(password, utilisateur);
-        if (!passwordOk) return res.status(401).json({ message: "Identifiants invalides" });
+    try {
+        const result = await trouverUtilisateurParCourriel(courriel);
+        if (result.rows.length === 0) {
+            return res.status(401).json({ message: "Identifiants invalides" });
+        }
+
+        const utilisateur = result.rows[0];
+
+        const passwordOk = await bcrypt.compare(password, utilisateur.password);
+        if (!passwordOk) {
+            return res.status(401).json({ message: "Identifiants invalides" });
+        }
+
+        let cle_api = utilisateur.cle_api;
 
         if (regen === 'true') {
             const nouvelleCle = createRandomString();
-            await db.query('UPDATE utilisateurs SET cle_api = $1 WHERE id = $2', [nouvelleCle, utilisateur.id]);
-            return res.status(200).json({ cle_api: nouvelleCle });
+            await mettreAJourCleApi(utilisateur.id, nouvelleCle);
+            cle_api = nouvelleCle;
         }
 
-        res.status(200).json({ cle_api: utilisateur.cle_api });
+        res.status(200).json({ cle_api });
+
     } catch (err) {
+        console.error(err);
         res.status(500).json({ message: "Erreur lors de la récupération de la clé api" });
     }
 };

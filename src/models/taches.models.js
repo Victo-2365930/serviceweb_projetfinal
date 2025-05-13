@@ -196,21 +196,13 @@ const ajouterUtilisateur = (nom, prenom, courriel, password, cle_api) => {
     });
 };
 
-const trouverCleApi = (courriel, password) => {
-    return new Promise((resolve, reject) => {
-        const requete = `
-            SELECT cle_api
-            FROM utilisateurs
-            WHERE courriel = $1 AND password = $2
-        `;
-        db.query(requete, [courriel, password], (erreur, resultat) => {
-            if (erreur) {
-                console.log(`Erreur sqlState ${erreur.sqlState} : ${erreur.message}`);
-                return reject(erreur);
-            }
-            resolve(resultat);
-        });
-    });
+const trouverUtilisateurParCourriel = (courriel) => {
+    const requete = `
+        SELECT id, password, cle_api
+        FROM utilisateurs
+        WHERE courriel = $1
+    `;
+    return db.query(requete, [courriel]);
 };
 
 //Méthodes utilitaires
@@ -298,7 +290,7 @@ export {
     modifierStatutTache, modifierStatutSousTache,
     modifierSousTache, supprimerTache,
     supprimerSousTache, afficherTacheAvecSousTaches,
-    ajouterUtilisateur, trouverCleApi,
+    ajouterUtilisateur, trouverUtilisateurParCourriel,
     ValidationCle, verifierProprietaireTache,
     verifierProprietaireSousTache,
     recupererTacheIdSousTache
