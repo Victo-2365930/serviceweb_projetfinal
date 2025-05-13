@@ -1,56 +1,61 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Épreuve finale - Services Web H25</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-  <div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Épreuve finale - Services Web H25</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <script defer src="assets/js/script.js"></script>
+  </head>
+  <body>
     <header>
       <h1>Épreuve finale - Services Web H25</h1>
-      <p>Yohan Rajotte</p>
+      <h2>Yohan Rajotte</h2>
     </header>
 
-    <div>
-      <section>
+    <div id="separation">
+      <div class="partie">
         <h2>Création d’un utilisateur</h2>
         <form>
           <label for="prenom">Prénom</label>
-          <input type="text" id="prenom">
+          <input type="text" id="prenom" minlength="1"/>
 
           <label for="nom">Nom</label>
-          <input type="text" id="nom">
+          <input type="text" id="nom" minlength="1"/>
 
           <label for="courriel">Courriel</label>
-          <input type="email" id="courriel">
+          <input type="email" id="courriel" />
 
           <label for="motdepasse">Mot de passe</label>
-          <input type="password" id="motdepasse">
+          <input type="password" id="motdepasse" minlength="8"/>
 
-          <button type="submit">Créer</button>
+          <button id="boutonCreer">Créer</button>
         </form>
-      </section>
-    </div>
+      </div>
+
       <div class="separator"></div>
-    <div>
-      <section>
-        <h2>Récupération d’une clé api</h2>
+
+      <div class="partie">
+        <h2>Récupération la clé API</h2>
         <form>
-          <label for="courriel-cle">Courriel</label>
-          <input type="email" id="courriel-cle">
+          <label for="courrielcle">Courriel</label>
+          <input type="email" id="courriel-cle" />
 
-          <label for="motdepasse-cle">Mot de passe</label>
-          <input type="password" id="motdepasse-cle">
+          <label for="motdepassecle">Mot de passe</label>
+          <input type="password" id="motdepasse-cle" minlength="8" />
 
-            <input type="checkbox" id="generer" checked>
-            <label for="generer">Générer une nouvelle clé</label>
+          <div>
+            <input type="checkbox" id="generer" />
+            <label for="generer">Générer une nouvelle clé api</label>
+          </div>
 
-          <button type="submit">Récupérer</button>
+          <button id="boutonRecuperer">Récupérer</button>
         </form>
-      </section>
+      </div>
     </div>
-  </div>
-</body>
+    <div id="bas" class="invisible">
+      <p>Clé API:</p>
+      <textarea name="cle_api" id="cle_api"></textarea>
+    </div>
+  </body>
 </html>
