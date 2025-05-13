@@ -1,8 +1,105 @@
-
 {
     "openapi": "3.1.0",
-    "info":{
-        "title": "API service-web",
-        "version": "1.0.0"
+    "summary": "Utilisation du site web",
+    "info": {
+      "title": "API service-web",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://service-web-api.onrender.com/",
+        "description": "Serveur web"
+      }
+    ],
+    "paths": {
+      "/taches": {
+        "get": {
+          "summary": "Lister les tâches de l'usager",
+          "tags": ["Tâches"],
+          "description": "Retourne les tâches associées à l'usager authentifié. Par défaut, seules les tâches incomplètes sont retournées. Pour inclure toutes les tâches, ajouter l'en-tête `termine: 1`.",
+          "parameters": [
+            {
+              "in": "header",
+              "name": "termine",
+              "description": "Mettre à 1 pour inclure les tâches complétés",
+              "required": false,
+              "schema": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Liste des tâches récupérée avec succès",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "titre": {
+                          "type": "string",
+                          "example": "Aller pêcher"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "J'aime les patates"
+                        },
+                        "complete": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "utilisateur_id": {
+                          "type": "integer",
+                          "example": 12
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Clé API absente ou invalide",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Vous devez fournir une clé api"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Erreur du serveur",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Erreur lors de la récupération des tâches"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
-}
+  }
+  
