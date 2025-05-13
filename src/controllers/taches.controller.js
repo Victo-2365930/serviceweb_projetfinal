@@ -5,7 +5,8 @@ import {
     supprimerTache, afficherTacheAvecSousTaches,
     ajouterUtilisateur, trouverUtilisateurParCourriel, modifierSousTache,
     supprimerSousTache, verifierProprietaireTache, 
-    verifierProprietaireSousTache, recupererTacheIdSousTache
+    verifierProprietaireSousTache, recupererTacheIdSousTache,
+    mettreAJourCleApi
 } from "../models/taches.models.js";
 
 import {createRandomString} from "../utils/generercleapi.js";

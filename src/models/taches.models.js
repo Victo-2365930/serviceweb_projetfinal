@@ -205,6 +205,15 @@ const trouverUtilisateurParCourriel = (courriel) => {
     return db.query(requete, [courriel]);
 };
 
+const mettreAJourCleApi = (id, nouvelleCle) => {
+    const requete = `
+        UPDATE utilisateurs
+        SET cle_api = $1
+        WHERE id = $2
+    `;
+    return db.query(requete, [nouvelleCle, id]);
+};
+
 //Méthodes utilitaires
 
 const ValidationCle = (cleApi) => {
@@ -293,5 +302,5 @@ export {
     ajouterUtilisateur, trouverUtilisateurParCourriel,
     ValidationCle, verifierProprietaireTache,
     verifierProprietaireSousTache,
-    recupererTacheIdSousTache
+    recupererTacheIdSousTache, mettreAJourCleApi
 };
