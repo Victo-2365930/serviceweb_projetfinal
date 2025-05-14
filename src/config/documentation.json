@@ -48,7 +48,7 @@
     "post": {
       "summary": "Ajouter une nouvelle tâche",
       "description": "Crée une nouvelle tâche pour l'utilisateur authentifié.",
-      "tags" : ["Ajouter de tâche"],
+      "tags" : ["Ajouter une tâche"],
       "requestBody": {
         "required": true,
         "content": {
@@ -206,7 +206,7 @@
     "delete": {
       "summary": "Supprimer une tâche",
       "description": "Supprime une tâche spécifique.",
-      "tags" : ["Supprimer la tâche"],
+      "tags" : ["Supprimer une tâche"],
       "parameters": [
         {
           "name": "id",
