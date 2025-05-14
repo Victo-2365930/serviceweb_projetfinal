@@ -469,7 +469,7 @@
     "post": {
       "summary": "Créer un nouvel utilisateur",
       "description": "Enregistre un nouvel utilisateur et retourne sa clé API.",
-      "tags" : ["Intéraction utilisateur"],
+      "tags" : ["Interaction utilisateur"],
       "requestBody": {
         "required": true,
         "content": {
@@ -527,7 +527,7 @@
     "post": {
       "summary": "Récupérer ou regénérer une clé API",
       "description": "Récupère la clé API d'un utilisateur en vérifiant ses identifiants. Permet également de regénérer une nouvelle clé API.",
-      "tags" : ["Intéraction utilisateur"],
+      "tags" : ["Interaction utilisateur"],
       "requestBody": {
         "required": true,
         "content": {
