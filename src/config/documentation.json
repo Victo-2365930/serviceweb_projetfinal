@@ -15,7 +15,7 @@
   "/taches": {
     "get": {
       "summary": "Lister les tâches de l'utilisateur",
-      "tags" : ["Afficher la tâche"],
+      "tags" : ["Afficher [une/des] tâche(s)"],
       "description": "Récupère toutes les tâches de l'utilisateur. Par défaut, seules les tâches incomplètes sont retournées. Utilisez le paramètre 'termine' dans le header pour inclure les tâches complètes.",
       "parameters": [
         {
@@ -48,7 +48,7 @@
     "post": {
       "summary": "Ajouter une nouvelle tâche",
       "description": "Crée une nouvelle tâche pour l'utilisateur authentifié.",
-      "tags" : ["Ajout de tâche"],
+      "tags" : ["Ajouter de tâche"],
       "requestBody": {
         "required": true,
         "content": {
@@ -102,7 +102,7 @@
     "get": {
       "summary": "Afficher les détails d'une tâche",
       "description": "Récupère les détails complets d'une tâche spécifique, incluant ses sous-tâches et leur statut.",
-      "tags" : ["Afficher la tâche"],
+      "tags" : ["Afficher [une/des] tâche(s)"],
       "parameters": [
         {
           "name": "id",
@@ -243,7 +243,7 @@
     "patch": {
       "summary": "Modifier le statut d'une tâche",
       "description": "Change le statut d'une tâche (complète/incomplète).",
-      "tags" : ["Modifier la tâche"],
+      "tags" : ["Modifier le statut d'une tâche"],
       "parameters": [
         {
           "name": "id",
@@ -429,7 +429,7 @@
     "patch": {
       "summary": "Modifier le statut d'une sous-tâche",
       "description": "Change le statut d'une sous-tâche (complète/incomplète).",
-      "tags" : ["Modifier le statue d'une tâche"],
+      "tags" : ["Modifier le statut d'une tâche"],
       "parameters": [
         {
           "name": "id",
@@ -469,7 +469,7 @@
     "post": {
       "summary": "Créer un nouvel utilisateur",
       "description": "Enregistre un nouvel utilisateur et retourne sa clé API.",
-      "tags" : ["Intération utilisateur"],
+      "tags" : ["Intéraction utilisateur"],
       "requestBody": {
         "required": true,
         "content": {
