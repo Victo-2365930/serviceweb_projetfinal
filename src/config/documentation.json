@@ -1,105 +1,589 @@
 {
-    "openapi": "3.1.0",
-    "summary": "Utilisation du site web",
-    "info": {
-      "title": "API service-web",
-      "version": "1.0.0"
+  "openapi": "3.1.0",
+  "summary": "Utilisation du site web",
+  "info": {
+    "title": "API service-web",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://service-web-api.onrender.com/",
+      "description": "Serveur web"
+    }
+  ],
+  "paths": {
+  "/taches": {
+    "get": {
+      "summary": "Lister les tâches de l'utilisateur",
+      "description": "Récupère toutes les tâches de l'utilisateur. Par défaut, seules les tâches incomplètes sont retournées. Utilisez le paramètre 'termine' dans le header pour inclure les tâches complètes.",
+      "parameters": [
+        {
+          "name": "termine",
+          "in": "header",
+          "description": "Si égal à 1, inclut les tâches complètes dans la réponse.",
+          "schema": {
+            "type": "integer",
+            "enum": [1]
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Succès : Liste des tâches récupérée."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de récupérer les tâches."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
     },
-    "servers": [
-      {
-        "url": "https://service-web-api.onrender.com/",
-        "description": "Serveur web"
-      }
-    ],
-    "paths": {
-      "/taches": {
-        "get": {
-          "summary": "Lister les tâches de l'usager",
-          "tags": ["Tâches"],
-          "description": "Retourne les tâches associées à l'usager authentifié. Par défaut, seules les tâches incomplètes sont retournées. Pour inclure toutes les tâches, ajouter l'en-tête `termine: 1`.",
-          "parameters": [
-            {
-              "in": "header",
-              "name": "termine",
-              "description": "Mettre à 1 pour inclure les tâches complétés",
-              "required": false,
-              "schema": {
-                "type": "integer",
-                "example": 1
-              }
+    "post": {
+      "summary": "Ajouter une nouvelle tâche",
+      "description": "Crée une nouvelle tâche pour l'utilisateur authentifié.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "titre": {
+                  "type": "string",
+                  "description": "Titre de la tâche."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description détaillée de la tâche."
+                },
+                "date_debut": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date de début de la tâche (YYYY-MM-DD)."
+                },
+                "date_echeance": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Date d'échéance de la tâche (YYYY-MM-DD)."
+                }
+              },
+              "required": ["titre", "description", "date_debut", "date_echeance"]
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "Liste des tâches récupérée avec succès",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "integer",
-                          "example": 1
-                        },
-                        "titre": {
-                          "type": "string",
-                          "example": "Aller pêcher"
-                        },
-                        "description": {
-                          "type": "string",
-                          "example": "J'aime les patates"
-                        },
-                        "complete": {
-                          "type": "boolean",
-                          "example": false
-                        },
-                        "utilisateur_id": {
-                          "type": "integer",
-                          "example": 12
-                        }
-                      }
-                    }
-                  }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Succès : Tâche créée."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de créer la tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    }
+  },
+  "/taches/{id}": {
+    "get": {
+      "summary": "Afficher les détails d'une tâche",
+      "description": "Récupère les détails complets d'une tâche spécifique, incluant ses sous-tâches et leur statut.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la tâche à récupérer.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Succès : Détails de la tâche récupérés."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à voir cette tâche."
+        },
+        "404": {
+          "description": "Erreur : Tâche non trouvée."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de récupérer la tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    },
+    "put": {
+      "summary": "Modifier une tâche",
+      "description": "Met à jour les informations d'une tâche spécifique.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la tâche à modifier.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "titre": {
+                  "type": "string",
+                  "description": "Nouveau titre de la tâche."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Nouvelle description de la tâche."
+                },
+                "date_debut": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Nouvelle date de début (YYYY-MM-DD)."
+                },
+                "date_echeance": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Nouvelle date d'échéance (YYYY-MM-DD)."
                 }
-              }
-            },
-            "401": {
-              "description": "Clé API absente ou invalide",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string",
-                        "example": "Vous devez fournir une clé api"
-                      }
-                    }
-                  }
+              },
+              "required": ["titre", "description", "date_debut", "date_echeance"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Succès : Tâche modifiée."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à modifier cette tâche."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de modifier la tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    },
+    "delete": {
+      "summary": "Supprimer une tâche",
+      "description": "Supprime une tâche spécifique.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la tâche à supprimer.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Succès : Tâche supprimée."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à supprimer cette tâche."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de supprimer la tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    }
+  },
+  "/taches/statut/{id}": {
+    "patch": {
+      "summary": "Modifier le statut d'une tâche",
+      "description": "Change le statut d'une tâche (complète/incomplète).",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la tâche dont le statut doit être modifié.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Succès : Statut de la tâche mis à jour."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à modifier cette tâche."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de mettre à jour le statut."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    }
+  },
+  "/taches/{tache_id}/sous-taches": {
+    "post": {
+      "summary": "Ajouter une sous-tâche à une tâche",
+      "description": "Ajoute une nouvelle sous-tâche à une tâche existante.",
+      "parameters": [
+        {
+          "name": "tache_id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la tâche à laquelle ajouter la sous-tâche.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "titre": {
+                  "type": "string",
+                  "description": "Titre de la sous-tâche."
                 }
-              }
-            },
-            "500": {
-              "description": "Erreur du serveur",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string",
-                        "example": "Erreur lors de la récupération des tâches"
-                      }
-                    }
+              },
+              "required": ["titre"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Succès : Sous-tâche ajoutée."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à ajouter une sous-tâche à cette tâche."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible d'ajouter la sous-tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    }
+  },
+  "/sous-taches/{id}": {
+    "put": {
+      "summary": "Modifier une sous-tâche",
+      "description": "Met à jour le titre d'une sous-tâche spécifique.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la sous-tâche à modifier.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "titre": {
+                  "type": "string",
+                  "description": "Nouveau titre de la sous-tâche."
+                }
+              },
+              "required": ["titre"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Succès : Sous-tâche modifiée."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à modifier cette sous-tâche."
+        },
+        "404": {
+          "description": "Erreur : Sous-tâche non trouvée."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de modifier la sous-tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    },
+    "delete": {
+      "summary": "Supprimer une sous-tâche",
+      "description": "Supprime une sous-tâche spécifique.",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la sous-tâche à supprimer.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Succès : Sous-tâche supprimée."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à supprimer cette sous-tâche."
+        },
+        "404": {
+          "description": "Erreur : Sous-tâche non trouvée."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de supprimer la sous-tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    }
+  },
+  "/sous-taches/statut/{id}": {
+    "patch": {
+      "summary": "Modifier le statut d'une sous-tâche",
+      "description": "Change le statut d'une sous-tâche (complète/incomplète).",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID de la sous-tâche dont le statut doit être modifié.",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Succès : Statut de la sous-tâche mis à jour."
+        },
+        "401": {
+          "description": "Erreur : Clé API manquante ou invalide."
+        },
+        "403": {
+          "description": "Erreur : L'utilisateur n'est pas autorisé à modifier le statut de cette sous-tâche."
+        },
+        "404": {
+          "description": "Erreur : Sous-tâche non trouvée."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de mettre à jour le statut de la sous-tâche."
+        }
+      },
+      "security": [
+        {
+          "ApiKeyAuth": []
+        }
+      ]
+    }
+  },
+  "/utilisateurs": {
+    "post": {
+      "summary": "Créer un nouvel utilisateur",
+      "description": "Enregistre un nouvel utilisateur et retourne sa clé API.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nom": {
+                  "type": "string",
+                  "description": "Nom de l'utilisateur."
+                },
+                "prenom": {
+                  "type": "string",
+                  "description": "Prénom de l'utilisateur."
+                },
+                "courriel": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "Adresse courriel de l'utilisateur."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Mot de passe de l'utilisateur."
+                }
+              },
+              "required": ["nom", "prenom", "courriel", "password"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Succès : Utilisateur créé.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cle_api": {
+                    "type": "string",
+                    "description": "Clé API de l'utilisateur."
                   }
                 }
               }
             }
           }
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de créer l'utilisateur."
+        }
+      }
+    }
+  },
+  "/cle-api": {
+    "post": {
+      "summary": "Récupérer ou regénérer une clé API",
+      "description": "Récupère la clé API d'un utilisateur en vérifiant ses identifiants. Permet également de regénérer une nouvelle clé API.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "courriel": {
+                  "type": "string",
+                  "format": "email",
+                  "description": "Adresse courriel de l'utilisateur."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Mot de passe de l'utilisateur."
+                },
+                 "regen": {
+                  "type": "string",
+                  "enum": ["true", "false"],
+                  "description": "Indique si une nouvelle clé API doit être générée (true) ou non (false).",
+                  "default": "false"
+                }
+              },
+              "required": ["courriel", "password"]
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Succès : Clé API récupérée.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cle_api": {
+                    "type": "string",
+                    "description": "Clé API de l'utilisateur."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "Erreur : Identifiants invalides."
+        },
+        "500": {
+          "description": "Erreur serveur : Impossible de récupérer la clé API."
         }
       }
     }
   }
-  
+},
+"components": {
+  "securitySchemes": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "authorization",
+      "description": "Clé API pour l'authentification."
+    }
+  }
+},
+"security": [
+  {
+    "ApiKeyAuth": []
+  }
+]
+}
