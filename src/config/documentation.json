@@ -15,6 +15,7 @@
   "/taches": {
     "get": {
       "summary": "Lister les tâches de l'utilisateur",
+      "tags" : ["Afficher la tâche"],
       "description": "Récupère toutes les tâches de l'utilisateur. Par défaut, seules les tâches incomplètes sont retournées. Utilisez le paramètre 'termine' dans le header pour inclure les tâches complètes.",
       "parameters": [
         {
@@ -47,6 +48,7 @@
     "post": {
       "summary": "Ajouter une nouvelle tâche",
       "description": "Crée une nouvelle tâche pour l'utilisateur authentifié.",
+      "tags" : ["Ajout de tâche"],
       "requestBody": {
         "required": true,
         "content": {
@@ -100,6 +102,7 @@
     "get": {
       "summary": "Afficher les détails d'une tâche",
       "description": "Récupère les détails complets d'une tâche spécifique, incluant ses sous-tâches et leur statut.",
+      "tags" : ["Afficher la tâche"],
       "parameters": [
         {
           "name": "id",
@@ -137,6 +140,7 @@
     "put": {
       "summary": "Modifier une tâche",
       "description": "Met à jour les informations d'une tâche spécifique.",
+      "tags" : ["Modifier une tâche"],
       "parameters": [
         {
           "name": "id",
@@ -202,6 +206,7 @@
     "delete": {
       "summary": "Supprimer une tâche",
       "description": "Supprime une tâche spécifique.",
+      "tags" : ["Supprimer la tâche"],
       "parameters": [
         {
           "name": "id",
@@ -238,6 +243,7 @@
     "patch": {
       "summary": "Modifier le statut d'une tâche",
       "description": "Change le statut d'une tâche (complète/incomplète).",
+      "tags" : ["Modifier la tâche"],
       "parameters": [
         {
           "name": "id",
@@ -274,6 +280,7 @@
     "post": {
       "summary": "Ajouter une sous-tâche à une tâche",
       "description": "Ajoute une nouvelle sous-tâche à une tâche existante.",
+      "tags" : ["Ajouter une tâche"],
       "parameters": [
         {
           "name": "tache_id",
@@ -327,6 +334,7 @@
     "put": {
       "summary": "Modifier une sous-tâche",
       "description": "Met à jour le titre d'une sous-tâche spécifique.",
+      "tags" : ["Modifier une tâche"],
       "parameters": [
         {
           "name": "id",
@@ -381,6 +389,7 @@
     "delete": {
       "summary": "Supprimer une sous-tâche",
       "description": "Supprime une sous-tâche spécifique.",
+      "tags" : ["Supprimer une tâche"],
       "parameters": [
         {
           "name": "id",
@@ -420,6 +429,7 @@
     "patch": {
       "summary": "Modifier le statut d'une sous-tâche",
       "description": "Change le statut d'une sous-tâche (complète/incomplète).",
+      "tags" : ["Modifier le statue d'une tâche"],
       "parameters": [
         {
           "name": "id",
@@ -459,6 +469,7 @@
     "post": {
       "summary": "Créer un nouvel utilisateur",
       "description": "Enregistre un nouvel utilisateur et retourne sa clé API.",
+      "tags" : ["Intération utilisateur"],
       "requestBody": {
         "required": true,
         "content": {
@@ -516,6 +527,7 @@
     "post": {
       "summary": "Récupérer ou regénérer une clé API",
       "description": "Récupère la clé API d'un utilisateur en vérifiant ses identifiants. Permet également de regénérer une nouvelle clé API.",
+      "tags" : ["Intéraction utilisateur"],
       "requestBody": {
         "required": true,
         "content": {
